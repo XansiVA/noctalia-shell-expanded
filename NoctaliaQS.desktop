@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=NoctaliaQS
+Icon=/home/xansi/noctalia.png
+Exec=/usr/bin/quickshell -c /etc/xdg/quickshell/noctalia-shell
+Terminal=false
+X-GNOME-Autostart-enabled=true
