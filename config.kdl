@@ -160,6 +160,7 @@ layout {
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 spawn-sh-at-startup "qs -c noctalia-shell"
 spawn-sh-at-startup "exec /usr/lib/gvfs/gvfs-udisks2-volume-monitor"
+spawn-sh-at-startup "xwayland-satlellite"
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
@@ -169,19 +170,25 @@ hotkey-overlay {
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 animations {
+    
+       window-close {
+        duration-ms 150
+        curve "ease-out-quad"
+    }
+
+    window-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+    }
+
+}
 //these are just fine for niri, and some come with quickshell!
-}
-debug {
-  honor-xdg-activation-with-invalid-serial
-}
-
-window-rule {
-
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    default-column-width {}
-}
 
 // Open the Firefox picture-in-picture player as floating by default.
+
 window-rule {
    
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
