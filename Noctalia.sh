@@ -4,33 +4,51 @@ set -e
 # Colors for output
 GREEN="\e[32m"
 RED="\e[31m"
+YELLOW="\e[33m"
 RESET="\e[0m"
 
 echo -e "${GREEN}=== Arch Linux Setup Script (paru-based) ===${RESET}"
 
-# Step 1: Install paru if not installed
-if ! command -v paru &> /dev/null; then
-    echo -e "${GREEN}Installing paru...${RESET}"
-    sudo pacman -S --needed --noconfirm base-devel git
-    git clone https://aur.archlinux.org/paru.git /tmp/paru
-    cd /tmp/paru
-    makepkg -si --noconfirm
-    cd -
-else
-    echo -e "${GREEN}paru already installed!${RESET}"
-fi
+# Check if packages are already installed
+PACKAGES_TO_CHECK="quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl ddcutil cliphist matugen cava wlsunset xdg-desktop-portal kitty gnome-text-editor oh-my-posh xwayland-satellite gnome-keyring corectl networkmanager vesktop fzf grim slurp satty fastfetch"
 
-# Step 2: Install packages
-echo -e "${GREEN}Installing required packages...${RESET}"
-paru -S --needed --noconfirm \
-    quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl \
-    ddcutil cliphist matugen cava wlsunset xdg-desktop-portal \
-    kitty gnome-text-editor oh-my-posh \
-    xwayland-satellite gnome-keyring corectl \
-    networkmanager vesktop 
+ALL_INSTALLED=true
+for pkg in $PACKAGES_TO_CHECK; do
+    if ! pacman -Qi "$pkg" &> /dev/null && ! paru -Qi "$pkg" &> /dev/null; then
+        ALL_INSTALLED=false
+        break
+    fi
+done
+
+if [ "$ALL_INSTALLED" = true ]; then
+    echo -e "${YELLOW}All packages already installed! Skipping installation steps...${RESET}"
+else
+    # Step 1: Install paru if not installed
+    if ! command -v paru &> /dev/null; then
+        echo -e "${GREEN}Installing paru...${RESET}"
+        sudo pacman -S --needed --noconfirm base-devel git
+        git clone https://aur.archlinux.org/paru.git /tmp/paru
+        cd /tmp/paru
+        makepkg -si --noconfirm
+        cd -
+    else
+        echo -e "${GREEN}paru already installed!${RESET}"
+    fi
+
+    # Step 2: Install packages
+    echo -e "${GREEN}Installing required packages...${RESET}"
+    paru -S --needed --noconfirm \
+        quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl \
+        ddcutil cliphist matugen cava wlsunset xdg-desktop-portal \
+        kitty gnome-text-editor oh-my-posh \
+        xwayland-satellite gnome-keyring corectl \
+        networkmanager vesktop fzf grim slurp satty fastfetch
+fi
 
 # Step 3: Copy configuration files
 REPO_DIR="$HOME/noctalia-shell-expanded"
+
+echo -e "${GREEN}Copying configuration files...${RESET}"
 
 # Niri config
 echo -e "${GREEN}Copying Niri configuration...${RESET}"
@@ -38,13 +56,6 @@ NIRI_SRC="$REPO_DIR/config.kdl"
 NIRI_DEST="$HOME/.config/niri/config.kdl"
 mkdir -p "$(dirname "$NIRI_DEST")"
 cp "$NIRI_SRC" "$NIRI_DEST"
-
-# Fuzzel config Noctalia shell already edits this file.
-#echo -e "${GREEN}Copying Fuzzel configuration...${RESET}"
-#FUZZEL_SRC="$REPO_DIR/fuzzel.ini"
-#FUZZEL_DEST="$HOME/.config/fuzzel/fuzzel.ini"
-#mkdir -p "$(dirname "$FUZZEL_DEST")"
-#cp "$FUZZEL_SRC" "$FUZZEL_DEST"
 
 # Desktop file
 echo -e "${GREEN}Copying desktop file...${RESET}"
@@ -60,6 +71,13 @@ KITTY_DEST="$HOME/.config/kitty/kitty.conf"
 mkdir -p "$(dirname "$KITTY_DEST")"
 cp "$KITTY_SRC" "$KITTY_DEST"
 
+# Fuzzel config
+echo -e "${GREEN}Copying Fuzzel configuration...${RESET}"
+FUZZEL_SRC="$REPO_DIR/fuzzel.ini"
+FUZZEL_DEST="$HOME/.config/fuzzel/fuzzel.ini"
+mkdir -p "$(dirname "$FUZZEL_DEST")"
+cp "$FUZZEL_SRC" "$FUZZEL_DEST"
+
 # Bashrc
 echo -e "${GREEN}Replacing .bashrc...${RESET}"
 BASHRC_SRC="$REPO_DIR/.bashrc"
@@ -67,5 +85,96 @@ BASHRC_DEST="$HOME/.bashrc"
 rm -f "$BASHRC_DEST"
 cp "$BASHRC_SRC" "$BASHRC_DEST"
 
+# Fastfetch config
+echo -e "${GREEN}Creating fastfetch configuration...${RESET}"
+FASTFETCH_DIR="$HOME/.config/fastfetch"
+mkdir -p "$FASTFETCH_DIR"
+cat > "$FASTFETCH_DIR/config.jsonc" << 'EOF'
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "auto"
+    },
+    "display": {
+        "separator": " → "
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "packages",
+        "shell",
+        "display",
+        "de",
+        "wm",
+        "terminal",
+        "cpu",
+        "gpu",
+        "memory",
+        "disk",
+        "battery",
+        "locale",
+        "break",
+        "colors"
+    ]
+}
+EOF
+
 echo -e "${GREEN}=== Setup complete! ===${RESET}"
+sleep 1
+clear 
+# Config editor menu
+echo -e "${YELLOW}Would you like to edit configuration files? (y/n)${RESET}"
+read -r response
+
+if [[ "$response" =~ ^[Yy]$ ]]; then
+    echo -e "${GREEN}Searching for config files in ~/.config...${RESET}"
+    
+    # Find all config files with specified extensions
+    CONFIG_FILE=$(find "$HOME/.config" -type f \( \
+        -name "*.conf" -o \
+        -name "*.config" -o \
+        -name "*.toml" -o \
+        -name "*.kdl" -o \
+        -name "*.json" -o \
+        -name "*.jsonc" -o \
+        -name "*.ini" \
+    \) 2>/dev/null | fzf --prompt="Select a config file to edit: " --height=40% --border)
+    
+    if [ -n "$CONFIG_FILE" ]; then
+        echo -e "${GREEN}Opening $CONFIG_FILE...${RESET}"
+        ${EDITOR:-nano} "$CONFIG_FILE"
+        
+        # Ask if they want to edit another
+        while true; do
+            echo -e "${YELLOW}Edit another config file? (y/n)${RESET}"
+            read -r again
+            if [[ "$again" =~ ^[Yy]$ ]]; then
+                CONFIG_FILE=$(find "$HOME/.config" -type f \( \
+                    -name "*.conf" -o \
+                    -name "*.config" -o \
+                    -name "*.toml" -o \
+                    -name "*.kdl" -o \
+                    -name "*.json" -o \
+                    -name "*.jsonc" -o \
+                    -name "*.ini" \
+                \) 2>/dev/null | fzf --prompt="Select a config file to edit: " --height=40% --border)
+                
+                if [ -n "$CONFIG_FILE" ]; then
+                    echo -e "${GREEN}Opening $CONFIG_FILE...${RESET}"
+                    ${EDITOR:-nano} "$CONFIG_FILE"
+                else
+                    break
+                fi
+            else
+                break
+            fi
+        done
+    fi
+fi
+clear
+echo -e "${GREEN}All done! Enjoy your Noctalia setup! 🌙${RESET}"
 sleep 1
