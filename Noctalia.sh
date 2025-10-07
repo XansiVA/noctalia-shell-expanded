@@ -93,32 +93,116 @@ cat > "$FASTFETCH_DIR/config.jsonc" << 'EOF'
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
     "logo": {
-        "type": "auto"
+        "type": "auto",
+        "padding": {
+            "top": 1,
+            "right": 3
+        }
     },
     "display": {
-        "separator": " → "
+        "separator": " ╰─",
+        "key": {
+            "width": 18,
+            "paddingLeft": 2
+        },
+        "percent": {
+            "type": 3
+        },
+        "size": {
+            "binaryPrefix": "si"
+        },
+        "color": {
+            "keys": "blue",
+            "title": "cyan"
+        }
     },
     "modules": [
-        "title",
-        "separator",
-        "os",
-        "host",
-        "kernel",
-        "uptime",
-        "packages",
-        "shell",
-        "display",
-        "de",
-        "wm",
-        "terminal",
-        "cpu",
-        "gpu",
-        "memory",
-        "disk",
-        "battery",
-        "locale",
+        {
+            "type": "custom",
+            "format": "┌──────────────────────────────────────────────┐"
+        },
+        {
+            "type": "title",
+            "keyColor": "cyan",
+            "color": {
+                "user": "cyan",
+                "at": "white",
+                "host": "blue"
+            }
+        },
+        {
+            "type": "custom",
+            "format": "├──────────────────────────────────────────────┤"
+        },
+        {
+            "type": "os",
+            "key": "  OS",
+            "keyColor": "blue"
+        },
+        {
+            "type": "kernel",
+            "key": "  Kernel",
+            "keyColor": "blue"
+        },
+        {
+            "type": "packages",
+            "key": "  Packages",
+            "keyColor": "blue"
+        },
+        {
+            "type": "shell",
+            "key": "  Shell",
+            "keyColor": "blue"
+        },
+        {
+            "type": "wm",
+            "key": "  WM",
+            "keyColor": "blue"
+        },
+        {
+            "type": "terminal",
+            "key": "  Terminal",
+            "keyColor": "blue"
+        },
+        {
+            "type": "uptime",
+            "key": "  Uptime",
+            "keyColor": "blue"
+        },
+        {
+            "type": "custom",
+            "format": "├──────────────────────────────────────────────┤"
+        },
+        {
+            "type": "cpu",
+            "key": "  CPU",
+            "keyColor": "green"
+        },
+        {
+            "type": "gpu",
+            "key": "  GPU",
+            "keyColor": "green"
+        },
+        {
+            "type": "memory",
+            "key": "  Memory",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "disk",
+            "key": "  Disk",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "custom",
+            "format": "└──────────────────────────────────────────────┘"
+        },
         "break",
-        "colors"
+        {
+            "type": "colors",
+            "paddingLeft": 2,
+            "symbol": "circle"
+        }
     ]
 }
 EOF
