@@ -75,11 +75,11 @@ mkdir -p "$(dirname "$DESKTOP_DEST")"
 cp "$DESKTOP_SRC" "$DESKTOP_DEST"
 
 # Kitty config
-echo -e "${GREEN}Copying Kitty configuration...${RESET}"
-KITTY_SRC="$REPO_DIR/kitty.conf"
-KITTY_DEST="$HOME/.config/kitty/kitty.conf"
-mkdir -p "$(dirname "$KITTY_DEST")"
-cp "$KITTY_SRC" "$KITTY_DEST"
+#echo -e "${GREEN}Copying Kitty configuration...${RESET}"
+#KITTY_SRC="$REPO_DIR/kitty.conf"
+#KITTY_DEST="$HOME/.config/kitty/kitty.conf"
+#mkdir -p "$(dirname "$KITTY_DEST")"
+#cp "$KITTY_SRC" "$KITTY_DEST"
 
 # Fuzzel config
 #echo -e "${GREEN}Copying Fuzzel configuration...${RESET}"
