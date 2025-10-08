@@ -35,14 +35,23 @@ else
         echo -e "${GREEN}paru already installed!${RESET}"
     fi
 
-    # Step 2: Install packages
-    echo -e "${GREEN}Installing required packages...${RESET}"
+    # Step 2: Install official repo packages first
+    echo -e "${GREEN}Installing official repository packages...${RESET}"
+    sudo pacman -S --needed --noconfirm \
+        ttf-roboto inter-font brightnessctl ddcutil cliphist cava wlsunset \
+        xdg-desktop-portal kitty gnome-text-editor gnome-keyring \
+        networkmanager fzf grim slurp fastfetch
+    
+    # Step 3: Install AUR packages (specify non-git versions)
+    echo -e "${GREEN}Installing AUR packages...${RESET}"
     paru -S --needed --noconfirm \
-        quickshell ttf-roboto inter-font gpu-screen-recorder brightnessctl \
-        ddcutil cliphist matugen cava wlsunset xdg-desktop-portal \
-        kitty gnome-text-editor oh-my-posh \
-        xwayland-satellite gnome-keyring corectl \
-        networkmanager vesktop fzf grim slurp satty fastfetch
+        quickshell \
+        gpu-screen-recorder \
+        oh-my-posh-bin \
+        matugen-bin \
+        xwayland-satellite \
+        vesktop-bin \
+        satty-bin
 fi
 
 # Step 3: Copy configuration files
