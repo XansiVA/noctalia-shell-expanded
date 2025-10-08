@@ -51,7 +51,8 @@ else
         matugen-bin \
         xwayland-satellite \
         vesktop-bin \
-        satty
+        satty \
+        noctalia-shell
 fi
 
 # Step 3: Copy configuration files
