@@ -8,7 +8,7 @@ sudo pacman -Syu
 git clone https://github.com/XansiVA/noctalia-shell-expanded.git
 cd ~/noctalia-shell-expanded
 sudo chmod 700 Noctalia.sh
-/.Noctalia.sh 
+./Noctalia.sh 
 ```
 
 Just do these things you should be fine.
