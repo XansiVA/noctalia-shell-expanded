@@ -72,11 +72,11 @@ mkdir -p "$(dirname "$KITTY_DEST")"
 cp "$KITTY_SRC" "$KITTY_DEST"
 
 # Fuzzel config
-echo -e "${GREEN}Copying Fuzzel configuration...${RESET}"
-FUZZEL_SRC="$REPO_DIR/fuzzel.ini"
-FUZZEL_DEST="$HOME/.config/fuzzel/fuzzel.ini"
-mkdir -p "$(dirname "$FUZZEL_DEST")"
-cp "$FUZZEL_SRC" "$FUZZEL_DEST"
+#echo -e "${GREEN}Copying Fuzzel configuration...${RESET}"
+#FUZZEL_SRC="$REPO_DIR/fuzzel.ini"
+#FUZZEL_DEST="$HOME/.config/fuzzel/fuzzel.ini"
+#mkdir -p "$(dirname "$FUZZEL_DEST")"
+#cp "$FUZZEL_SRC" "$FUZZEL_DEST"
 
 # Bashrc
 echo -e "${GREEN}Replacing .bashrc...${RESET}"
