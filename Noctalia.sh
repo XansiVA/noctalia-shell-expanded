@@ -45,13 +45,13 @@ else
     # Step 3: Install AUR packages (specify non-git versions)
     echo -e "${GREEN}Installing AUR packages...${RESET}"
     paru -S --needed --noconfirm \
-        quickshell \
+        quickshell-git \
         gpu-screen-recorder \
         oh-my-posh-bin \
         matugen-bin \
         xwayland-satellite \
         vesktop-bin \
-        satty-bin
+        satty
 fi
 
 # Step 3: Copy configuration files
